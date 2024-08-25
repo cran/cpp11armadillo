@@ -81,12 +81,12 @@ cpp_vendor <- function(dir = NULL, subdir = "/inst/include") {
   )
 
   dir.create(
-    file.path(path, "armadillo"),
+    file.path(path, "cpp11armadillo"),
     recursive = TRUE,
     showWarnings = FALSE
   )
 
-  current_cpp11armadillo <- system.file(
+  current_armadillo <- system.file(
     "include",
     "cpp11armadillo",
     package = "cpp11armadillo"
@@ -98,36 +98,36 @@ cpp_vendor <- function(dir = NULL, subdir = "/inst/include") {
     package = "cpp11armadillo"
   )
 
-  if (!nzchar(current_cpp11armadillo)) {
+  if (!nzchar(current_armadillo)) {
     stop("cpp11armadillo is not installed", call. = FALSE)
   }
 
-  cpp11armadillo_version <- utils::packageVersion("cpp11armadillo")
+  armadillo_version <- utils::packageVersion("cpp11armadillo")
 
-  cpp11armadillo_header <- sprintf(
+  armadillo_header <- sprintf(
     "// cpp11armadillo version: %s\n// vendored on: %s",
-    cpp11armadillo_version,
+    armadillo_version,
     Sys.Date()
   )
 
   write_header(
-    path, "cpp11armadillo.hpp", "cpp11armadillo",
-    cpp11armadillo_header
+    path, "armadillo.hpp", "cpp11armadillo",
+    armadillo_header
   )
 
   write_header(
     path, "armadillo.hpp", "cpp11armadillo",
-    cpp11armadillo_header
-  )
-
-  copy_files(
-    list.files(current_cpp11armadillo, full.names = TRUE),
-    path, "cpp11armadillo", cpp11armadillo_header
+    armadillo_header
   )
 
   copy_files(
     list.files(current_armadillo, full.names = TRUE),
-    path, "armadillo", cpp11armadillo_header
+    path, "cpp11armadillo", armadillo_header
+  )
+
+  copy_files(
+    list.files(current_armadillo, full.names = TRUE),
+    path, "cpp11armadillo", armadillo_header
   )
 
   # Additional steps to make vendoring work ----
@@ -142,10 +142,10 @@ cpp_vendor <- function(dir = NULL, subdir = "/inst/include") {
   invisible(path)
 }
 
-write_header <- function(path, header, pkg, cpp11armadillo_header) {
+write_header <- function(path, header, pkg, armadillo_header) {
   writeLines(
     c(
-      cpp11armadillo_header,
+      armadillo_header,
       readLines(
         system.file("include", header, package = pkg)
       )
@@ -154,10 +154,10 @@ write_header <- function(path, header, pkg, cpp11armadillo_header) {
   )
 }
 
-copy_files <- function(files, path, out, cpp11armadillo_header) {
+copy_files <- function(files, path, out, armadillo_header) {
   for (f in files) {
     writeLines(
-      c(cpp11armadillo_header, readLines(f)),
+      c(armadillo_header, readLines(f)),
       file.path(path, out, basename(f))
     )
   }

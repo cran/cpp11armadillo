@@ -6,6 +6,6 @@
 
 #include <armadillo.hpp>
 #include <cpp11.hpp>
-#include <cpp11armadillo/matrices.hpp>
-#include <cpp11armadillo/vectors.hpp>
-#include <cpp11armadillo/sparse_matrices.hpp>
+#include <wrappers/matrices.hpp>
+#include <wrappers/sparse_matrices.hpp>
+#include <wrappers/vectors.hpp>

@@ -1,3 +1,21 @@
+# cpp11armadillo 0.3.1
+
+* Adds Jonathan as a contributor.
+* Includes the working paper for arXiv.
+
+# cpp11armadillo 0.3.0
+
+* Uses Armadillo version "Stochastic Parrot 14.0.2".
+
+# cpp11armadillo 0.2.9
+
+* Uses Armadillo version Cortisol Retox 12.6.7.
+* Removes leontief dependency to test the functions.
+* Adds minimal documentation to use OpenBLAS with R and Armadillo.
+* New examples, which are clearer and more informative.
+* New `Makevars` template with commented debbuging flags and that allows to set the number of cores.
+* Adds `armadillo_version()` to get the version of Armadillo from R.
+
 # cpp11armadillo 0.2.8
 
 * Provides templates to convert to and from sparse matrices.
@@ -31,7 +49,7 @@
 
 # cpp11armadillo 0.1.1
 
-* Includes more formal tests in the `cpp11armadillotest` directory.
+* Includes more formal tests in the `armadillotest` directory.
 * Provides a conversion from complex vector/matrix to a list of double
   vectors/matrices.
 
