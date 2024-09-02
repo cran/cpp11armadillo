@@ -1,7 +1,17 @@
+# cpp11armadillo 0.3.3
+
+* Rewritten vignettes.
+
+# cpp11armadillo 0.3.2
+
+* Includes `armadillo.hpp` only once in the headers.
+* Improved package template.
+
 # cpp11armadillo 0.3.1
 
 * Adds Jonathan as a contributor.
 * Includes the working paper for arXiv.
+* Avoids duplicating `mtcars_mat` for the tests.
 
 # cpp11armadillo 0.3.0
 
@@ -49,7 +59,7 @@
 
 # cpp11armadillo 0.1.1
 
-* Includes more formal tests in the `armadillotest` directory.
+* Includes more formal tests in the `cpp11armadillotest` directory.
 * Provides a conversion from complex vector/matrix to a list of double
   vectors/matrices.
 

@@ -12,7 +12,7 @@
 
 
 
-<title>Introduction to ‘armadillo’</title>
+<title>Basic ‘cpp11armadillo’ usage</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -352,50 +352,28 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Introduction to ‘armadillo’</h1>
+<h1 class="title toc-ignore">Basic ‘cpp11armadillo’ usage</h1>
 
 
 
-<div id="motivations" class="section level1">
-<h1>Motivations</h1>
-<p>The development of armadillo emerges from the desire to follow a simplified approach towards R and C++ integration by building on top of <a href="https://cran.r-project.org/package=cpp11">cpp11</a>, a ground up rewrite of C++ bindings to R with different design trade-offs and features. armadillo aims at providing an additional layer to put the end-user focus on the computation instead of configuration <span class="citation">(Vaughan, Hester, and François 2023)</span>.</p>
-<p><a href="https://arma.sourceforge.net/">Armadillo</a> is a linear algebra library for the C++ language, aiming towards a good balance between speed and ease of use. It is justified in the fact that C++, in its current form, is very valuable to address bottlenecks that we find with interpreted languages such as R and Python but it does not provide data structures nor functions for linear algebra <span class="citation">(Sanderson and Curtin 2016)</span>.</p>
-<p><a href="https://cran.r-project.org/package=RcppArmadillo">RcppArmadillo</a> was first published to CRAN in 2010, and it allows to use Armadillo via <a href="https://cran.r-project.org/package=Rcpp">Rcpp</a>, a widely extended R package to call C++ functions from R <span class="citation">(Eddelbuettel and Sanderson 2014)</span>.</p>
-</div>
-<div id="design-choices" class="section level1">
-<h1>Design choices</h1>
-<p>The design choices in armadillo are:</p>
-<ul>
-<li>Providing a simpler implementation that makes the library easier to understand, maintain, and extend, benefiting both current users and future contributors.</li>
-<li>Offering a completely header-only approach, eliminating Application Binary Interface compatibility issues and simplifying library integration and distribution.</li>
-<li>Facilitating vendoring, which allows for the inclusion of the library directly in projects, thus simplifying dependency management and distribution.</li>
-</ul>
-<p>These ideas reflect a comprehensive effort to provide an efficient interface for integrating C++ and R that aligns with the Tidy philosophy <span class="citation">(Wickham et al. 2019)</span>, addressing both the technical and community-driven aspects that influence software evolution.</p>
-<p>These choices have advantages and disadvantages. A disadvantage is that armadillo will not convert data types automatically, the user must be explicit about data types, especially when passing data from R to C++ and then exporting the final computation back to R. An advantage is that armadillo codes, including its internal templates, can be adapted to work with Python via <a href="https://pybind11.readthedocs.io/en/stable/index.html">pybind11</a> <span class="citation">(Jakob, Rhinelander, and Moldovan 2016)</span>.</p>
-<p>armadillo uses <span class="citation">Hansen (2022)</span> notation, meaning that matrices are column-major and vectors are expressed as column vectors (i.e., <span class="math inline">\(N\times1\)</span> matrices).</p>
-</div>
-<div id="examples" class="section level1">
-<h1>Examples</h1>
-<p>Convention: input R matrices are denoted by <code>x</code>, <code>y</code>, <code>z</code>, and output or intermediate C++ matrices are denoted by <code>X</code>, <code>Y</code>, <code>Z</code>. The example functions can be called from R scripts and should have proper headers as in the following code:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;armadillo.hpp&gt;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;cpp11.hpp&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;cpp11armadillo.hpp&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="kw">using</span> <span class="kw">namespace</span> arma;</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="kw">using</span> <span class="kw">namespace</span> cpp11;</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>[[<span class="at">cpp11</span>::<span class="at">register</span>]] <span class="co">// allows using the function in R</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>doubles_matrix&lt;&gt; solve_mat(doubles_matrix&lt;&gt; x) {</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; Y = as_Mat(x); <span class="co">// convert from R to C++</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; Yinv = inv(Y); <span class="co">// Y^(-1)</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a>  <span class="cf">return</span> as_doubles_matrix(Yinv); <span class="co">// convert from C++ to R</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>}</span></code></pre></div>
-<p>This example includes the Armadillo, cpp11 and armadillo libraries, and allows interfacing C++ with R (i.e., the <code>#include &lt;cpp11.hpp&gt;</code>). It also loads the corresponding namespaces (i.e., the <code>using namespace cpp11</code>) in order to simplify the notation (i.e., using <code>Mat</code> instead of <code>arma::Mat</code>).</p>
-<p>The <code>as_Mat()</code> function is provided by armadillo to pass a <code>matrix</code> object from R to C++ and that Armadillo can read.</p>
-<p>The <code>as_doubles_matrix()</code> function is also provided by armadillo to pass a <code>Mat&lt;double&gt;</code> or <code>Mat&lt;int&gt;</code> object from C++ to R.</p>
-<div id="ordinary-least-squares" class="section level2">
-<h2>Ordinary Least Squares</h2>
-<p>Given a design matrix <span class="math inline">\(X\)</span> and and outcome vector <span class="math inline">\(y\)</span>, one function to obtain the OLS estimator <span class="math inline">\(\hat{\beta} = (X^tX)^{-1}(X^tY)\)</span> as a matrix (i.e., column vector) is:</p>
+<div id="ordinary-least-squares-examples" class="section level1">
+<h1>Ordinary Least Squares Examples</h1>
+<p>The Ordinary Least Squares (OLS) estimator is <span class="math inline">\(\hat{\beta} = (X^tX)^{-1}(X^tY)\)</span> for a design matrix <span class="math inline">\(X\)</span> and an outcome vector <span class="math inline">\(Y\)</span> <span class="citation">(Hansen 2022)</span>.</p>
+<p>The following code shows how to compute the OLS estimator using Armadillo and sending data from R to C++ and viceversa using <code>cpp11</code> and <code>cpp11armadillo</code> <span class="citation">(Sanderson and Curtin 2016)</span>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;cpp11.hpp&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;cpp11armadillo.hpp&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="kw">using</span> <span class="kw">namespace</span> arma;</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="kw">using</span> <span class="kw">namespace</span> cpp11;</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>[[<span class="at">cpp11</span>::<span class="at">register</span>]] doubles_matrix&lt;&gt; <span class="va">ols_mat_</span>(<span class="at">const</span> doubles_matrix&lt;&gt;&amp; x) {</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; Y = as_Mat(x); <span class="co">// convert from R to C++</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; Yinv = inv(Y); <span class="co">// Y^(-1)</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>  <span class="cf">return</span> as_doubles_matrix(Yinv); <span class="co">// convert from C++ to R</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>}</span></code></pre></div>
+<p>The previous code includes the <code>cpp11</code> and <code>cpp11armadillo</code> libraries (cpp11armadillo calls Armadillo) to allow interfacing C++ with R. It also loads the corresponding namespaces in order to simplify the notation (i.e., using <code>Mat</code> instead of <code>arma::Mat</code>), and the function <code>as_Mat()</code> and <code>as_doubles_mat()</code> are provided by <code>cpp11armadillo</code> to pass a <code>matrix</code> object from R to C++ and that Armadillo can read and then pass it back to R.</p>
+<p>The use of <code>const</code> and <code>&amp;</code> are specific to the C++ language and allow to pass data from R to C++ without copying the data, and therefore saving time and memory.</p>
+<p><code>cpp11armadillo</code> provides flexibility and in the case of the resulting vector of OLS coefficients, it can be returned as a matrix or a vector. The following code shows how to create three functions to compute the OLS estimator and return the result as a matrix or a vector avoiding repeated code:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>Mat&lt;<span class="dt">double</span>&gt; <span class="va">ols_</span>(<span class="at">const</span> doubles_matrix&lt;&gt;&amp; y, <span class="at">const</span> doubles_matrix&lt;&gt;&amp; x) {</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; Y = as_Mat(y);  <span class="co">// Col&lt;double&gt; Y = as_Col(y); also works</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; X = as_Mat(x);</span>
@@ -407,29 +385,27 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>  <span class="cf">return</span> beta;</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>}</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>[[<span class="at">cpp11</span>::<span class="at">register</span>]] doubles_matrix&lt;&gt; ols_mat(<span class="at">const</span> doubles_matrix&lt;&gt;&amp; y,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>                                             <span class="at">const</span> doubles_matrix&lt;&gt;&amp; x) {</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>[[<span class="at">cpp11</span>::<span class="at">register</span>]] doubles_matrix&lt;&gt; <span class="va">ols_mat_</span>(<span class="at">const</span> doubles_matrix&lt;&gt;&amp; y,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>                                              <span class="at">const</span> doubles_matrix&lt;&gt;&amp; x) {</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; beta = <span class="va">ols_</span>(y, x);</span>
 <span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>  <span class="cf">return</span> as_doubles_matrix(beta);</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>}</span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>[[<span class="at">cpp11</span>::<span class="at">register</span>]] doubles ols_dbl(<span class="at">const</span> doubles_matrix&lt;&gt;&amp; y,</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>                                    <span class="at">const</span> doubles_matrix&lt;&gt;&amp; x) {</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>[[<span class="at">cpp11</span>::<span class="at">register</span>]] doubles <span class="va">ols_dbl_</span>(<span class="at">const</span> doubles_matrix&lt;&gt;&amp; y,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>                                     <span class="at">const</span> doubles_matrix&lt;&gt;&amp; x) {</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; beta = <span class="va">ols_</span>(y, x);</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true"></a>  <span class="cf">return</span> as_doubles(beta);</span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true"></a>}</span></code></pre></div>
-<p>The <code>ols_mat()</code> function receives inputs from R and calls <code>ols_()</code> to do the computation on C++ side. The use of <code>const</code> and <code>&amp;</code> are specific to the C++ language and allow to pass data from R to C++ while avoiding copying the data, therefore saving time and memory.</p>
-<p>The <code>ols_dbl()</code> function does the same but returns a vector instead of a matrix.</p>
+<p>In the previous code, the <code>ols_mat_()</code> function receives inputs from R and calls <code>ols_()</code> to do the computation on C++ side, and <code>ols_dbl_()</code> does the same but it returns a vector instead of a matrix.</p>
 </div>
-</div>
-<div id="benchmarks" class="section level1">
-<h1>Benchmarks</h1>
-<p>A proper benchmark is to compute eigenvalues for large matrices. Both armadillo and RcppArmadillo use Armadillo as a backend, and the marginal observed differences are because of how cpp11 and Rcpp pass data from R to C++ and viceversa. The computation times are identical.</p>
+<div id="eigenvalues-benchmark" class="section level1">
+<h1>Eigenvalues benchmark</h1>
+<p>A proper benchmark is to compute eigenvalues for large matrices. Both <code>cpp11armadillo</code> and <code>RcppArmadillo</code> use Armadillo as a backend, and the marginal observed differences are because of how cpp11 and Rcpp pass data from R to C++ and viceversa. The computation times are identical.</p>
 <table>
 <thead>
 <tr class="header">
 <th align="left">Input</th>
-<th align="right">Median time armadillo</th>
+<th align="right">Median time cpp11armadillo</th>
 <th align="right">Median time RcppArmadillo</th>
 </tr>
 </thead>
@@ -460,7 +436,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <thead>
 <tr class="header">
 <th align="left">Input</th>
-<th align="right">Memory allocation armadillo</th>
+<th align="right">Memory allocation cpp11armadillo</th>
 <th align="right">Memory allocation RcppArmadillo</th>
 </tr>
 </thead>
@@ -487,48 +463,37 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </tr>
 </tbody>
 </table>
-<p>The armadillo computation was obtained with the <code>eigen_sym_mat()</code> function already shown.</p>
-<p>The RcppArmadillo computation was obtained with the following function:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;RcppArmadillo.h&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="co">// [[Rcpp::depends(RcppArmadillo)]]</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="co">// [[Rcpp::export]]</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>arma::mat eigen_sym_mat(<span class="at">const</span> arma::mat&amp; x) {</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>  arma::mat y = eig_sym(x);</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>  <span class="cf">return</span> y;</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>}</span></code></pre></div>
-<p>In order to get the RcppArmadillo function to work, we had to dedicate time to search online about the error <code>function &#39;enterRNGScope&#39; not provided by package &#39;Rcpp&#39;</code>, which required to include <code>// [[Rcpp::depends(RcppArmadillo)]]</code> for the function to work.</p>
+<p>The <code>cpp11armadillo</code> computation was obtained with the following function:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>[[<span class="at">cpp11</span>::<span class="at">register</span>]] doubles_matrix&lt;&gt; eigen_sym_mat(<span class="at">const</span> doubles_matrix&lt;&gt;&amp; x) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; X = as_Mat(x);</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>  Mat&lt;<span class="dt">double</span>&gt; y = eig_sym(X);</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  <span class="cf">return</span> as_doubles_matrix(y);</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>}</span></code></pre></div>
+<p>The <code>RcppArmadillo</code> computation was obtained with the following function:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;RcppArmadillo.h&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="co">// [[Rcpp::depends(RcppArmadillo)]]</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="kw">using</span> <span class="kw">namespace</span> Rcpp;</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="co">// [[Rcpp::export]]</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>arma::mat eigen_sym_mat(<span class="at">const</span> arma::mat&amp; x) {</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>  arma::mat y = eig_sym(x);</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>  <span class="cf">return</span> y;</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>}</span></code></pre></div>
+<p>In order to get the <code>RcppArmadillo</code> function to work, we had to dedicate time to search online about the error <code>function &#39;enterRNGScope&#39; not provided by package &#39;Rcpp&#39;</code>, which required to include <code>// [[Rcpp::depends(RcppArmadillo)]]</code> for the function to work.</p>
 </div>
 <div id="additional-examples" class="section level1">
 <h1>Additional Examples</h1>
-<p>The package repository includes the directory <code>armadillotest</code>, which contains an R package that uses Armadillo, and that provides additional examples for eigenvalues, QR decomposition, and others.</p>
-</div>
-<div id="conclusion" class="section level1">
-<h1>Conclusion</h1>
-<p>RcppArmadillo has been and will continue to be widely successful. armadillo is a alternative templated implementation with different design trade-offs and features. Both packages can co-exist and continue to enrich the R community.</p>
+<p>The package repository includes the directory <code>cpp11armadillotest</code>, which contains an R package that uses Armadillo, and that provides additional examples for eigenvalues, Cholesky and QR decomposition, and linear models.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references hanging-indent">
-<div id="ref-Eddelbuettel2014">
-<p>Eddelbuettel, Dirk, and Conrad Sanderson. 2014. “RcppArmadillo: Accelerating R with High-Performance C++ Linear Algebra.” <em>Computational Statistics &amp; Data Analysis</em> 71 (March): 1054–63. <a href="https://doi.org/10.1016/j.csda.2013.02.005">https://doi.org/10.1016/j.csda.2013.02.005</a>.</p>
-</div>
 <div id="ref-Hansen2022">
 <p>Hansen, Bruce. 2022. <em>Econometrics</em>. Princeton University Press.</p>
 </div>
-<div id="ref-pybind11">
-<p>Jakob, Wenzel, Jason Rhinelander, and Dean Moldovan. 2016. <em>Pybind11 — Seamless Operability Between C++11 and Python</em>. <a href="https://github.com/pybind/pybind11">https://github.com/pybind/pybind11</a>.</p>
-</div>
 <div id="ref-Sanderson2016">
 <p>Sanderson, Conrad, and Ryan Curtin. 2016. “Armadillo: A Template-Based C++ Library for Linear Algebra.” <em>Journal of Open Source Software</em> 1 (2): 26. <a href="https://doi.org/10.21105/joss.00026">https://doi.org/10.21105/joss.00026</a>.</p>
-</div>
-<div id="ref-cpp11">
-<p>Vaughan, Davis, Jim Hester, and Romain François. 2023. <em>Cpp11: A C++11 Interface for R’s c Interface</em>. <a href="https://CRAN.R-project.org/package=cpp11">https://CRAN.R-project.org/package=cpp11</a>.</p>
-</div>
-<div id="ref-Wickham2019">
-<p>Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019. “Welcome to the Tidyverse.” <em>Journal of Open Source Software</em> 4 (43): 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>.</p>
 </div>
 </div>
 </div>

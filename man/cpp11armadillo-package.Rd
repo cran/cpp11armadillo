@@ -6,7 +6,7 @@
 \alias{cpp11armadillo-package}
 \title{cpp11armadillo: An 'Armadillo' Interface}
 \description{
-Provides function declarations and inline function definitions that facilitate communication between R and the 'Armadillo' 'C++' library for linear algebra and scientific computing.
+Provides function declarations and inline function definitions that facilitate communication between R and the 'Armadillo' 'C++' library for linear algebra and scientific computing. This implementation is detailed in Vargas Sepulveda and Schneider Malamud (2024) \doi{10.48550/arXiv.2408.11074}.
 }
 \seealso{
 Useful links:
@@ -19,6 +19,11 @@ Useful links:
 }
 \author{
 \strong{Maintainer}: Mauricio Vargas Sepulveda \email{m.sepulveda@mail.utoronto.ca} (\href{https://orcid.org/0000-0003-1017-7574}{ORCID})
+
+Authors:
+\itemize{
+  \item Conrad Sanderson (Armadillo library (C++))
+}
 
 Other contributors:
 \itemize{
