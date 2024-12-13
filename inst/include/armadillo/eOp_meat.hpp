@@ -49,6 +49,14 @@ inline eOp<T1, eop_type>::~eOp() {
 }
 
 template <typename T1, typename eop_type>
+template <typename eT2>
+inline bool eOp<T1, eop_type>::is_alias(const Mat<eT2>& X) const {
+  arma_debug_sigprint();
+
+  return P.is_alias(X);
+}
+
+template <typename T1, typename eop_type>
 arma_inline uword eOp<T1, eop_type>::get_n_rows() const {
   return is_row ? 1 : P.get_n_rows();
 }

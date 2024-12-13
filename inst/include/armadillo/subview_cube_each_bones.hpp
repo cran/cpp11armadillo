@@ -34,6 +34,7 @@ class subview_cube_each_common {
   arma_cold inline const std::string incompat_size_string(const Mat<eT2>& A) const;
 };
 
+// NOTE: deliberately not derived from BaseCube
 template <typename eT>
 class subview_cube_each1 : public subview_cube_each_common<eT> {
  protected:
@@ -60,6 +61,7 @@ class subview_cube_each1 : public subview_cube_each_common<eT> {
   friend class Cube<eT>;
 };
 
+// NOTE: deliberately not derived from BaseCube
 template <typename eT, typename TB>
 class subview_cube_each2 : public subview_cube_each_common<eT> {
  protected:

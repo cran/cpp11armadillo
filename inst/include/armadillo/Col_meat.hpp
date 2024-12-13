@@ -991,13 +991,13 @@ inline Col<eT>::fixed<fixed_n_elem>::fixed(const fill::fill_class<fill_type>&)
     (*this).ones();
   }
   if (is_same_type<fill_type, fill::fill_eye>::yes) {
-    (*this).eye();
+    Mat<eT>::eye();
   }
   if (is_same_type<fill_type, fill::fill_randu>::yes) {
-    (*this).randu();
+    Mat<eT>::randu();
   }
   if (is_same_type<fill_type, fill::fill_randn>::yes) {
-    (*this).randn();
+    Mat<eT>::randn();
   }
 }
 

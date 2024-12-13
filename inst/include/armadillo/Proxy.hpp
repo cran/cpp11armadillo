@@ -169,7 +169,7 @@ struct Proxy<Mat<eT> > {
 
   template <typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const {
-    return (is_same_type<eT, eT2>::value) ? (void_ptr(&Q) == void_ptr(&X)) : false;
+    return (is_same_type<eT, eT2>::yes) && (void_ptr(&Q) == void_ptr(&X));
   }
 
   template <typename eT2>
@@ -213,7 +213,7 @@ struct Proxy<Col<eT> > {
 
   template <typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const {
-    return (is_same_type<eT, eT2>::value) ? (void_ptr(&Q) == void_ptr(&X)) : false;
+    return (is_same_type<eT, eT2>::yes) && (void_ptr(&Q) == void_ptr(&X));
   }
 
   template <typename eT2>
@@ -257,7 +257,7 @@ struct Proxy<Row<eT> > {
 
   template <typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const {
-    return (is_same_type<eT, eT2>::value) ? (void_ptr(&Q) == void_ptr(&X)) : false;
+    return (is_same_type<eT, eT2>::yes) && (void_ptr(&Q) == void_ptr(&X));
   }
 
   template <typename eT2>
@@ -985,7 +985,7 @@ struct Proxy<subview<eT> > {
 
   template <typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const {
-    return (is_same_type<eT, eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false;
+    return (is_same_type<eT, eT2>::yes) && (void_ptr(&(Q.m)) == void_ptr(&X));
   }
 
   template <typename eT2>
@@ -1029,7 +1029,7 @@ struct Proxy<subview_col<eT> > {
 
   template <typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const {
-    return (is_same_type<eT, eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false;
+    return (is_same_type<eT, eT2>::yes) && (void_ptr(&(Q.m)) == void_ptr(&X));
   }
 
   template <typename eT2>
@@ -1077,7 +1077,7 @@ struct Proxy<subview_cols<eT> > {
 
   template <typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const {
-    return (is_same_type<eT, eT2>::value) ? (void_ptr(&(sv.m)) == void_ptr(&X)) : false;
+    return (is_same_type<eT, eT2>::yes) && (void_ptr(&(sv.m)) == void_ptr(&X));
   }
 
   template <typename eT2>
@@ -1121,7 +1121,7 @@ struct Proxy<subview_row<eT> > {
 
   template <typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const {
-    return (is_same_type<eT, eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false;
+    return (is_same_type<eT, eT2>::yes) && (void_ptr(&(Q.m)) == void_ptr(&X));
   }
 
   template <typename eT2>
@@ -1276,7 +1276,7 @@ struct Proxy<diagview<eT> > {
 
   template <typename eT2>
   arma_inline bool is_alias(const Mat<eT2>& X) const {
-    return (is_same_type<eT, eT2>::value) ? (void_ptr(&(Q.m)) == void_ptr(&X)) : false;
+    return (is_same_type<eT, eT2>::yes) && (void_ptr(&(Q.m)) == void_ptr(&X));
   }
 
   template <typename eT2>

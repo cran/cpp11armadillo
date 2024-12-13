@@ -1,3 +1,21 @@
+# cpp11armadillo 0.4.0
+
+* Uses Armadillo 14.2.2 for C++15 compatibility.
+* Adds a configure file to check the compatibility between the C++ compiler and
+  Armadillo.
+* Provides additional Econometrics examples.
+
+# cpp11armadillo 0.3.5
+
+* The example package now includes a configure file to set the number of cores
+  when compiling the package.
+* The package template includes instructions to alter the default number of
+  cores (50% of the available cores).
+
+# cpp11armadillo 0.3.4
+
+* Uses `std::copy` and `std::memcpy` to convert between R and C++.
+
 # cpp11armadillo 0.3.3
 
 * Rewritten vignettes.

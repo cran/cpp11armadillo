@@ -193,6 +193,8 @@ template <typename eT>
 template <uword fixed_n_elem>
 class Col<eT>::fixed : public Col<eT> {
  private:
+  using Mat<eT>::mem_local;
+
   static constexpr bool use_extra = (fixed_n_elem > arma_config::mat_prealloc);
 
   arma_align_mem eT mem_local_extra[(use_extra) ? fixed_n_elem : 1];

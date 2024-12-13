@@ -26,6 +26,8 @@ inline typename T1::pod_type op_rcond::apply(const Base<typename T1::elem_type, 
   typedef typename T1::pod_type T;
 
   if (strip_trimat<T1>::do_trimat) {
+    arma_debug_print("op_rcond::apply(): tri optimisation");
+
     const strip_trimat<T1> S(X.get_ref());
 
     const quasi_unwrap<typename strip_trimat<T1>::stored_type> U(S.M);
@@ -47,7 +49,7 @@ inline typename T1::pod_type op_rcond::apply(const Base<typename T1::elem_type, 
   }
 
   if (is_op_diagmat<T1>::value || A.is_diagmat()) {
-    arma_debug_print("op_rcond::apply(): detected diagonal matrix");
+    arma_debug_print("op_rcond::apply(): diag optimisation");
 
     const eT* colmem = A.memptr();
     const uword N = A.n_rows;
@@ -75,32 +77,18 @@ inline typename T1::pod_type op_rcond::apply(const Base<typename T1::elem_type, 
   const bool is_tril = (is_triu) ? false : trimat_helper::is_tril(A);
 
   if (is_triu || is_tril) {
+    arma_debug_print("op_rcond::apply(): tri optimisation");
+
     const uword layout = (is_triu) ? uword(0) : uword(1);
 
     return auxlib::rcond_trimat(A, layout);
   }
 
-  const bool try_sympd =
-      arma_config::optimise_sym &&
-      (auxlib::crippled_lapack(A) ? false : sym_helper::guess_sympd(A));
+  if ((arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) &&
+      (is_sym_expr<T1>::eval(X.get_ref()) || sym_helper::is_approx_sym(A, uword(100)))) {
+    arma_debug_print("op_rcond::apply(): symmetric/hermitian optimisation");
 
-  if (try_sympd) {
-    arma_debug_print("op_rcond::apply(): attempting sympd optimisation");
-
-    bool calc_ok = false;
-
-    const T out_val = auxlib::rcond_sympd(A, calc_ok);
-
-    if (calc_ok) {
-      return out_val;
-    }
-
-    arma_debug_print("op_rcond::apply(): sympd optimisation failed");
-
-    // auxlib::rcond_sympd() may have failed because A isn't really sympd
-    // restore A, as auxlib::rcond_sympd() may have destroyed it
-    A = X.get_ref();
-    // fallthrough to the next return statement
+    return auxlib::rcond_sym(A);
   }
 
   return auxlib::rcond(A);

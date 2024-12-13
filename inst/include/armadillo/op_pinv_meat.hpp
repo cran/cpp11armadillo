@@ -86,7 +86,7 @@ inline bool op_pinv::apply_direct(Mat<typename T1::elem_type>& out,
   }
 
   if (is_op_diagmat<T1>::value || A.is_diagmat()) {
-    arma_debug_print("op_pinv: detected diagonal matrix");
+    arma_debug_print("op_pinv: diag optimisation");
 
     return op_pinv::apply_diag(out, A, tol);
   }
@@ -101,12 +101,7 @@ inline bool op_pinv::apply_direct(Mat<typename T1::elem_type>& out,
     do_sym = is_sym_expr<T1>::eval(expr.get_ref());
 
     if (do_sym == false) {
-      bool is_approx_sym = false;
-      bool is_approx_sympd = false;
-
-      sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
-
-      do_sym = ((is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd));
+      do_sym = sym_helper::is_approx_sym(A);
     }
   }
 

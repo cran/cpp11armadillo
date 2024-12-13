@@ -45,6 +45,9 @@ class mtOp : public Base<out_eT, mtOp<out_eT, T1, op_type> > {
 
   inline ~mtOp();
 
+  template <typename eT2>
+  inline bool is_alias(const Mat<eT2>& X) const;
+
   arma_aligned const T1& m;  //!< the operand; must be derived from Base
   arma_aligned in_eT aux;    //!< auxiliary data, using the element type as used by T1
   arma_aligned out_eT aux_out_eT;  //!< auxiliary data, using the element type as

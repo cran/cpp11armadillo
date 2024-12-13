@@ -19,7 +19,7 @@
 //! @{
 
 template <typename T1, typename T2>
-arma_warn_unused arma_inline
+arma_warn_unused inline
     typename enable_if2<is_arma_type<T1>::value, const Glue<T1, T2, glue_powext> >::result
     pow(const T1& X, const Base<typename T1::elem_type, T2>& Y) {
   arma_debug_sigprint();
@@ -28,7 +28,7 @@ arma_warn_unused arma_inline
 }
 
 template <typename parent, unsigned int mode, typename T2>
-arma_warn_unused inline Mat<typename parent::elem_type> pow(
+arma_deprecated inline Mat<typename parent::elem_type> pow(
     const subview_each1<parent, mode>& X, const Base<typename parent::elem_type, T2>& Y) {
   arma_debug_sigprint();
 
@@ -36,7 +36,7 @@ arma_warn_unused inline Mat<typename parent::elem_type> pow(
 }
 
 template <typename T1, typename T2>
-arma_warn_unused arma_inline const GlueCube<T1, T2, glue_powext> pow(
+arma_warn_unused inline const GlueCube<T1, T2, glue_powext> pow(
     const BaseCube<typename T1::elem_type, T1>& X,
     const BaseCube<typename T1::elem_type, T2>& Y) {
   arma_debug_sigprint();
@@ -45,8 +45,8 @@ arma_warn_unused arma_inline const GlueCube<T1, T2, glue_powext> pow(
 }
 
 template <typename eT, typename T2>
-arma_warn_unused inline Cube<eT> pow(const subview_cube_each1<eT>& X,
-                                     const Base<eT, T2>& Y) {
+arma_deprecated inline Cube<eT> pow(const subview_cube_each1<eT>& X,
+                                    const Base<eT, T2>& Y) {
   arma_debug_sigprint();
 
   return glue_powext::apply(X, Y);
@@ -55,7 +55,7 @@ arma_warn_unused inline Cube<eT> pow(const subview_cube_each1<eT>& X,
 //
 
 template <typename T1, typename T2>
-arma_warn_unused arma_inline typename enable_if2<
+arma_warn_unused inline typename enable_if2<
     (is_arma_type<T1>::value && is_cx<typename T1::elem_type>::yes),
     const mtGlue<typename T1::elem_type, T1, T2, glue_powext_cx> >::result
 pow(const T1& X, const Base<typename T1::pod_type, T2>& Y) {
@@ -65,8 +65,8 @@ pow(const T1& X, const Base<typename T1::pod_type, T2>& Y) {
 }
 
 template <typename parent, unsigned int mode, typename T2>
-arma_warn_unused inline typename enable_if2<is_cx<typename parent::elem_type>::yes,
-                                            Mat<typename parent::elem_type> >::result
+arma_deprecated inline typename enable_if2<is_cx<typename parent::elem_type>::yes,
+                                           Mat<typename parent::elem_type> >::result
 pow(const subview_each1<parent, mode>& X, const Base<typename parent::pod_type, T2>& Y) {
   arma_debug_sigprint();
 
@@ -74,10 +74,9 @@ pow(const subview_each1<parent, mode>& X, const Base<typename parent::pod_type, 
 }
 
 template <typename T1, typename T2>
-arma_warn_unused arma_inline const
-    mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>
-    pow(const BaseCube<std::complex<typename T1::pod_type>, T1>& X,
-        const BaseCube<typename T1::pod_type, T2>& Y) {
+arma_warn_unused inline const mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>
+pow(const BaseCube<std::complex<typename T1::pod_type>, T1>& X,
+    const BaseCube<typename T1::pod_type, T2>& Y) {
   arma_debug_sigprint();
 
   return mtGlueCube<typename T1::elem_type, T1, T2, glue_powext_cx>(X.get_ref(),
@@ -85,7 +84,7 @@ arma_warn_unused arma_inline const
 }
 
 template <typename T, typename T2>
-arma_warn_unused inline Cube<std::complex<T> > pow(
+arma_deprecated inline Cube<std::complex<T> > pow(
     const subview_cube_each1<std::complex<T> >& X, const Base<T, T2>& Y) {
   arma_debug_sigprint();
 

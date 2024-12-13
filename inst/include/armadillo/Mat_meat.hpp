@@ -1077,6 +1077,14 @@ inline void Mat<eT>::steal_mem_col(Mat<eT>& x, const uword max_n_rows) {
   }
 }
 
+template <typename eT>
+template <typename eT2>
+arma_inline bool Mat<eT>::is_alias(const Mat<eT2>& X) const {
+  arma_debug_sigprint();
+
+  return (is_same_type<eT, eT2>::yes) && (void_ptr(this) == void_ptr(&X));
+}
+
 //! construct a matrix from a given auxiliary array of eTs.
 //! if copy_aux_mem is true, new memory is allocated and the array is copied.
 //! if copy_aux_mem is false, the auxiliary array is used directly (without allocating
@@ -7030,13 +7038,13 @@ inline Mat<eT>::fixed<fixed_n_rows, fixed_n_cols>::fixed(
     (*this).ones();
   }
   if (is_same_type<fill_type, fill::fill_eye>::yes) {
-    (*this).eye();
+    Mat<eT>::eye();
   }
   if (is_same_type<fill_type, fill::fill_randu>::yes) {
-    (*this).randu();
+    Mat<eT>::randu();
   }
   if (is_same_type<fill_type, fill::fill_randn>::yes) {
-    (*this).randn();
+    Mat<eT>::randn();
   }
 }
 

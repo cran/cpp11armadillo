@@ -96,7 +96,7 @@ inline bool op_sqrtmat::apply_direct(Mat<std::complex<typename T1::elem_type> >&
   }
 
   if (A.is_diagmat()) {
-    arma_debug_print("op_sqrtmat: detected diagonal matrix");
+    arma_debug_print("op_sqrtmat: diag optimisation");
 
     const uword N = A.n_rows;
 
@@ -274,7 +274,7 @@ inline bool op_sqrtmat_cx::apply_direct(Mat<typename T1::elem_type>& out,
   }
 
   if (S.is_diagmat()) {
-    arma_debug_print("op_sqrtmat_cx: detected diagonal matrix");
+    arma_debug_print("op_sqrtmat_cx: diag optimisation");
 
     const uword N = S.n_rows;
 
@@ -423,7 +423,7 @@ inline bool op_sqrtmat_sympd::apply_direct(Mat<typename T1::elem_type>& out,
     }
 
     if (is_op_diagmat<T1>::value || X.is_diagmat()) {
-      arma_debug_print("op_sqrtmat_sympd: detected diagonal matrix");
+      arma_debug_print("op_sqrtmat_sympd: diag optimisation");
 
       out = X;
 

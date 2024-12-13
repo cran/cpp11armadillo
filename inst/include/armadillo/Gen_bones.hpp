@@ -50,6 +50,11 @@ class Gen : public Base<typename T1::elem_type, Gen<T1, gen_type> > {
   inline void apply_inplace_div(Mat<elem_type>& out) const;
 
   inline void apply(subview<elem_type>& out) const;
+
+  template <typename eT2>
+  constexpr bool is_alias(const Mat<eT2>&) const {
+    return false;
+  }
 };
 
 //! @}

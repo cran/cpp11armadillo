@@ -186,7 +186,7 @@ inline bool op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out,
   }
 
   if (is_op_diagmat<T1>::value || out.is_diagmat()) {
-    arma_debug_print("op_inv_gen_full: detected diagonal matrix");
+    arma_debug_print("op_inv_gen_full: diag optimisation");
 
     eT* colmem = out.memptr();
 
@@ -220,32 +220,17 @@ inline bool op_inv_gen_full::apply_direct(Mat<typename T1::elem_type>& out,
                                : ((is_triu_mat) ? false : trimat_helper::is_tril(out));
 
   if (is_triu_expr || is_tril_expr || is_triu_mat || is_tril_mat) {
+    arma_debug_print("op_inv_gen_full: tri optimisation");
+
     return auxlib::inv_tr(out, ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
   }
 
-  const bool try_sympd = arma_config::optimise_sym && sym_helper::guess_sympd(out);
+  if ((arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) &&
+      (is_sym_expr<T1>::eval(expr.get_ref()) ||
+       sym_helper::is_approx_sym(out, uword(100)))) {
+    arma_debug_print("op_inv_gen_full: symmetric/hermitian optimisation");
 
-  if (try_sympd) {
-    arma_debug_print("op_inv_gen_full: attempting sympd optimisation");
-
-    Mat<eT> tmp = out;
-
-    bool sympd_state = false;
-
-    const bool status = auxlib::inv_sympd(tmp, sympd_state);
-
-    if (status) {
-      out.steal_mem(tmp);
-      return true;
-    }
-
-    if ((status == false) && (sympd_state == true)) {
-      return false;
-    }
-
-    arma_debug_print("op_inv_gen_full: sympd optimisation failed");
-
-    // fallthrough if optimisation failed
+    return auxlib::inv_sym(out);
   }
 
   return auxlib::inv(out);
@@ -372,7 +357,7 @@ inline bool op_inv_gen_rcond::apply_direct(
                      [&]() { out.soft_reset(); });
 
   if (is_op_diagmat<T1>::value || out.is_diagmat()) {
-    arma_debug_print("op_inv_gen_rcond: detected diagonal matrix");
+    arma_debug_print("op_inv_gen_rcond: diag optimisation");
 
     out_state.is_diag = true;
 
@@ -421,37 +406,20 @@ inline bool op_inv_gen_rcond::apply_direct(
                                : ((is_triu_mat) ? false : trimat_helper::is_tril(out));
 
   if (is_triu_expr || is_tril_expr || is_triu_mat || is_tril_mat) {
+    arma_debug_print("op_inv_gen_rcond: tri optimisation");
+
     return auxlib::inv_tr_rcond(out, out_state.rcond,
                                 ((is_triu_expr || is_triu_mat) ? uword(0) : uword(1)));
   }
 
-  const bool try_sympd =
-      arma_config::optimise_sym &&
-      ((auxlib::crippled_lapack(out)) ? false : sym_helper::guess_sympd(out));
-
-  if (try_sympd) {
-    arma_debug_print("op_inv_gen_rcond: attempting sympd optimisation");
+  if ((arma_config::optimise_sym) && (auxlib::crippled_lapack(out) == false) &&
+      (is_sym_expr<T1>::eval(expr.get_ref()) ||
+       sym_helper::is_approx_sym(out, uword(100)))) {
+    arma_debug_print("op_inv_gen_rcond: symmetric/hermitian optimisation");
 
     out_state.is_sym = true;
 
-    Mat<eT> tmp = out;
-
-    bool sympd_state = false;
-
-    const bool status = auxlib::inv_sympd_rcond(tmp, sympd_state, out_state.rcond);
-
-    if (status) {
-      out.steal_mem(tmp);
-      return true;
-    }
-
-    if ((status == false) && (sympd_state == true)) {
-      return false;
-    }
-
-    arma_debug_print("op_inv_gen_rcond: sympd optimisation failed");
-
-    // fallthrough if optimisation failed
+    return auxlib::inv_sym_rcond(out, out_state.rcond);
   }
 
   return auxlib::inv_rcond(out, out_state.rcond);

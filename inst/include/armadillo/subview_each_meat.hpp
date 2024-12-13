@@ -71,8 +71,8 @@ inline const std::string subview_each_common<parent, mode>::incompat_size_string
   std::ostringstream tmp;
 
   if (mode == 0) {
-    tmp << "each_col(): incompatible size; expected " << P.n_rows << "x1"
-        << ", got " << A.n_rows << 'x' << A.n_cols;
+    tmp << "each_col(): incompatible size; expected " << P.n_rows << "x1" << ", got "
+        << A.n_rows << 'x' << A.n_cols;
   } else {
     tmp << "each_row(): incompatible size; expected 1x" << P.n_cols << ", got "
         << A.n_rows << 'x' << A.n_cols;

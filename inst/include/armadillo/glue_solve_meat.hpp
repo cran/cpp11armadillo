@@ -82,6 +82,7 @@ inline bool glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
   const bool refine = has_user_flags && bool(flags & solve_opts::flag_refine);
   const bool no_trimat = has_user_flags && bool(flags & solve_opts::flag_no_trimat);
   const bool force_approx = has_user_flags && bool(flags & solve_opts::flag_force_approx);
+  const bool force_sym = has_user_flags && bool(flags & solve_opts::flag_force_sym);
 
   if (has_user_flags) {
     arma_debug_print("glue_solve_gen_full::apply(): enabled flags:");
@@ -115,6 +116,9 @@ inline bool glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
     }
     if (force_approx) {
       arma_debug_print("force_approx");
+    }
+    if (force_sym) {
+      arma_debug_print("force_sym");
     }
 
     arma_conform_check(
@@ -150,20 +154,48 @@ inline bool glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
       arma_warn(2,
                 "solve(): option 'likely_sympd' ignored for forced approximate solution");
     }
+    if (force_sym) {
+      arma_warn(2, "solve(): option 'force_sym' ignored for forced approximate solution");
+    }
 
     return auxlib::solve_approx_svd(actual_out, A, B_expr.get_ref());  // A is overwritten
+  }
+
+  if (force_sym) {
+    if ((arma_config::check_conform) && (auxlib::rudimentary_sym_check(A) == false)) {
+      if (is_cx<eT>::no) {
+        arma_warn(
+            1, "solve(): option 'force_sym' enabled, but given matrix is not symmetric");
+      }
+      if (is_cx<eT>::yes) {
+        arma_warn(
+            1, "solve(): option 'force_sym' enabled, but given matrix is not hermitian");
+      }
+    }
+
+    if (likely_sympd) {
+      arma_warn(2, "solve(): option 'likely_sympd' ignored for forced symmetric solver");
+    }
+    if (equilibrate) {
+      arma_warn(2,
+                "solve(): option 'force_sym' ignored as option 'equilibrate' is enabled "
+                "(combination not implemented yet)");
+    }
+    if (refine) {
+      arma_warn(2,
+                "solve(): option 'force_sym' ignored as option 'refine' is enabled "
+                "(combination not implemented yet)");
+    }
   }
 
   // A_expr and B_expr can be used more than once (sympd optimisation fails or approximate
   // solution required), so ensure they are not overwritten in case we have aliasing
 
-  bool is_alias = true;  // assume we have aliasing until we can prove otherwise
+  const bool is_alias =
+      A_expr.get_ref().is_alias(actual_out) || B_expr.get_ref().is_alias(actual_out);
 
-  if (is_Mat<T1>::value && is_Mat<T2>::value) {
-    const quasi_unwrap<T1> UA(A_expr.get_ref());
-    const quasi_unwrap<T2> UB(B_expr.get_ref());
-
-    is_alias = UA.is_alias(actual_out) || UB.is_alias(actual_out);
+  if (is_alias) {
+    arma_debug_print("glue_solve_gen_full::apply(): aliasing detected");
   }
 
   Mat<eT> tmp;
@@ -178,22 +210,29 @@ inline bool glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
     uword KL = 0;
     uword KU = 0;
 
-    const bool is_band =
-        arma_config::optimise_band && ((no_band || auxlib::crippled_lapack(A))
-                                           ? false
-                                           : band_helper::is_band(KL, KU, A, uword(32)));
+    const bool is_band = arma_config::optimise_band &&
+                         ((no_band || force_sym || auxlib::crippled_lapack(A))
+                              ? false
+                              : band_helper::is_band(KL, KU, A, uword(32)));
 
-    const bool is_triu = (no_trimat || refine || equilibrate || likely_sympd || is_band)
-                             ? false
-                             : trimat_helper::is_triu(A);
-    const bool is_tril =
-        (no_trimat || refine || equilibrate || likely_sympd || is_band || is_triu)
+    const bool is_triu =
+        (no_trimat || refine || equilibrate || likely_sympd || force_sym || is_band)
             ? false
-            : trimat_helper::is_tril(A);
+            : trimat_helper::is_triu(A);
+    const bool is_tril = (no_trimat || refine || equilibrate || likely_sympd ||
+                          force_sym || is_band || is_triu)
+                             ? false
+                             : trimat_helper::is_tril(A);
 
+    const bool is_sym = arma_config::optimise_sym &&
+                        ((refine || equilibrate || likely_sympd || force_sym || is_band ||
+                          is_triu || is_tril || auxlib::crippled_lapack(A))
+                             ? false
+                             : is_sym_expr<T1>::eval(A_expr.get_ref()));
     const bool try_sympd =
         arma_config::optimise_sym &&
-        ((no_sympd || auxlib::crippled_lapack(A) || is_band || is_triu || is_tril)
+        ((no_sympd || is_sym || force_sym || is_band || is_triu || is_tril ||
+          auxlib::crippled_lapack(A))
              ? false
              : (likely_sympd ? true : sym_helper::guess_sympd(A, uword(16))));
 
@@ -225,6 +264,10 @@ inline bool glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
         const uword layout = (is_triu) ? uword(0) : uword(1);
 
         status = auxlib::solve_trimat_fast(out, A, B_expr.get_ref(), layout);
+      } else if (force_sym || is_sym) {
+        arma_debug_print("glue_solve_gen_full::apply(): fast + sym");
+
+        status = auxlib::solve_sym_fast(out, A, B_expr.get_ref());  // A is overwritten
       } else if (try_sympd) {
         arma_debug_print("glue_solve_gen_full::apply(): fast + try_sympd");
 
@@ -256,7 +299,12 @@ inline bool glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
         arma_debug_print("glue_solve_gen_full::apply(): refine + band");
 
         status = auxlib::solve_band_refine(out, rcond, A, KL, KU, B_expr, equilibrate);
-      } else if (try_sympd) {
+      }
+      // else
+      // if(force_sym || is_sym)  // TODO: implement auxlib::solve_sym_refine()
+      //   {
+      //   }
+      else if (try_sympd) {
         arma_debug_print("glue_solve_gen_full::apply(): refine + try_sympd");
 
         status = auxlib::solve_sympd_refine(out, rcond, A, B_expr.get_ref(),
@@ -303,6 +351,11 @@ inline bool glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
         const uword layout = (is_triu) ? uword(0) : uword(1);
 
         status = auxlib::solve_trimat_rcond(out, rcond, A, B_expr.get_ref(), layout);
+      } else if (force_sym || is_sym) {
+        arma_debug_print("glue_solve_gen_full::apply(): rcond + sym");
+
+        status =
+            auxlib::solve_sym_rcond(out, rcond, A, B_expr.get_ref());  // A is overwritten
       } else if (try_sympd) {
         bool sympd_state = false;
 
@@ -335,6 +388,9 @@ inline bool glue_solve_gen_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
     }
     if (likely_sympd) {
       arma_warn(2, "solve(): option 'likely_sympd' ignored for non-square matrix");
+    }
+    if (force_sym) {
+      arma_warn(2, "solve(): option 'force_sym' ignored for non-square matrix");
     }
 
     if (fast) {
@@ -418,12 +474,11 @@ inline bool glue_solve_tri_default::apply(Mat<eT>& actual_out, const Base<eT, T1
 
   const uword layout = (triu) ? uword(0) : uword(1);
 
-  bool is_alias = true;
+  const bool is_alias =
+      A_expr.get_ref().is_alias(actual_out) || B_expr.get_ref().is_alias(actual_out);
 
-  if (is_Mat<T2>::value) {
-    const quasi_unwrap<T2> UB(B_expr.get_ref());
-
-    is_alias = UA.is_alias(actual_out) || UB.is_alias(actual_out);
+  if (is_alias) {
+    arma_debug_print("glue_solve_tri_default::apply(): aliasing detected");
   }
 
   T rcond = T(0);
@@ -497,6 +552,7 @@ inline bool glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
   const bool refine = bool(flags & solve_opts::flag_refine);
   const bool no_trimat = bool(flags & solve_opts::flag_no_trimat);
   const bool force_approx = bool(flags & solve_opts::flag_force_approx);
+  const bool force_sym = bool(flags & solve_opts::flag_force_sym);
 
   arma_debug_print("glue_solve_tri_full::apply(): enabled flags:");
 
@@ -530,6 +586,15 @@ inline bool glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
   if (force_approx) {
     arma_debug_print("force_approx");
   }
+  if (force_sym) {
+    arma_debug_print("force_sym");
+  }
+
+  arma_conform_check(
+      (likely_sympd),
+      "solve(): option 'likely_sympd' not applicable to triangular matrix");
+  arma_conform_check((force_sym),
+                     "solve(): option 'force_sym' not applicable to triangular matrix");
 
   if (no_trimat || equilibrate || refine || force_approx) {
     const uword mask = ~(solve_opts::flag_triu | solve_opts::flag_tril);
@@ -537,10 +602,6 @@ inline bool glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
     return glue_solve_gen_full::apply(
         actual_out, ((triu) ? trimatu(A_expr.get_ref()) : trimatl(A_expr.get_ref())),
         B_expr, (flags & mask));
-  }
-
-  if (likely_sympd) {
-    arma_warn(2, "solve(): option 'likely_sympd' ignored for triangular matrix");
   }
 
   const quasi_unwrap<T1> UA(A_expr.get_ref());
@@ -551,12 +612,11 @@ inline bool glue_solve_tri_full::apply(Mat<eT>& actual_out, const Base<eT, T1>& 
 
   const uword layout = (triu) ? uword(0) : uword(1);
 
-  bool is_alias = true;
+  const bool is_alias =
+      A_expr.get_ref().is_alias(actual_out) || B_expr.get_ref().is_alias(actual_out);
 
-  if (is_Mat<T2>::value) {
-    const quasi_unwrap<T2> UB(B_expr.get_ref());
-
-    is_alias = UA.is_alias(actual_out) || UB.is_alias(actual_out);
+  if (is_alias) {
+    arma_debug_print("glue_solve_tri_full::apply(): aliasing detected");
   }
 
   T rcond = T(0);

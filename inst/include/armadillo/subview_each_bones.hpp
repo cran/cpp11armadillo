@@ -43,6 +43,7 @@ class subview_each_common {
   arma_cold inline const std::string incompat_size_string(const Mat<eT2>& A) const;
 };
 
+// NOTE: deliberately not derived from Base
 template <typename parent, unsigned int mode>
 class subview_each1 : public subview_each_common<parent, mode> {
  protected:
@@ -70,6 +71,7 @@ class subview_each1 : public subview_each_common<parent, mode> {
   friend class subview<eT>;
 };
 
+// NOTE: deliberately not derived from Base
 template <typename parent, unsigned int mode, typename TB>
 class subview_each2 : public subview_each_common<parent, mode> {
  protected:

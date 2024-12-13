@@ -67,7 +67,7 @@ inline bool op_expmat::apply_direct(Mat<typename T1::elem_type>& out,
                      "expmat(): given matrix must be square sized");
 
   if (A.is_diagmat()) {
-    arma_debug_print("op_expmat: detected diagonal matrix");
+    arma_debug_print("op_expmat: diag optimisation");
 
     const uword N = (std::min)(A.n_rows, A.n_cols);
 
@@ -80,18 +80,8 @@ inline bool op_expmat::apply_direct(Mat<typename T1::elem_type>& out,
     return true;
   }
 
-  bool do_sym = false;
-
-  if ((arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false)) {
-    bool is_approx_sym = false;
-    bool is_approx_sympd = false;
-
-    sym_helper::analyse_matrix(is_approx_sym, is_approx_sympd, A);
-
-    do_sym = ((is_cx<eT>::no) ? (is_approx_sym) : (is_approx_sym && is_approx_sympd));
-  }
-
-  if (do_sym) {
+  if ((arma_config::optimise_sym) && (auxlib::crippled_lapack(A) == false) &&
+      sym_helper::is_approx_sym(A)) {
     arma_debug_print("op_expmat: symmetric/hermitian optimisation");
 
     Col<T> eigval;
@@ -206,7 +196,7 @@ inline bool op_expmat_sym::apply_direct(Mat<typename T1::elem_type>& out,
     }
 
     if (is_op_diagmat<T1>::value || X.is_diagmat()) {
-      arma_debug_print("op_expmat_sym: detected diagonal matrix");
+      arma_debug_print("op_expmat_sym: diag optimisation");
 
       out = X;
 

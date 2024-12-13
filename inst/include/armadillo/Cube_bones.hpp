@@ -494,13 +494,13 @@ class Cube : public BaseCube<eT, Cube<eT> > {
   arma_warn_unused inline eT min() const;
   arma_warn_unused inline eT max() const;
 
-  inline eT min(uword& index_of_min_val) const;
-  inline eT max(uword& index_of_max_val) const;
+  arma_frown("use .index_min() instead") inline eT min(uword& index_of_min_val) const;
+  arma_frown("use .index_max() instead") inline eT max(uword& index_of_max_val) const;
 
-  inline eT min(uword& row_of_min_val, uword& col_of_min_val,
-                uword& slice_of_min_val) const;
-  inline eT max(uword& row_of_max_val, uword& col_of_max_val,
-                uword& slice_of_max_val) const;
+  arma_frown("use .index_min() with ind2sub() instead") inline eT
+      min(uword& row_of_min_val, uword& col_of_min_val, uword& slice_of_min_val) const;
+  arma_frown("use .index_max() with ind2sub() instead") inline eT
+      max(uword& row_of_max_val, uword& col_of_max_val, uword& slice_of_max_val) const;
 
   arma_cold inline bool save(const std::string name,
                              const file_type type = arma_binary) const;
@@ -598,6 +598,9 @@ template <typename eT>
 template <uword fixed_n_rows, uword fixed_n_cols, uword fixed_n_slices>
 class Cube<eT>::fixed : public Cube<eT> {
  private:
+  using Cube<eT>::mat_ptrs_local;
+  using Cube<eT>::mem_local;
+
   static constexpr uword fixed_n_elem = fixed_n_rows * fixed_n_cols * fixed_n_slices;
   static constexpr uword fixed_n_elem_slice = fixed_n_rows * fixed_n_cols;
 
