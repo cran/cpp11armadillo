@@ -12,19 +12,26 @@
 status](https://www.r-pkg.org/badges/version/cpp11armadillo)](https://CRAN.R-project.org/package=cpp11armadillo)
 <!-- badges: end -->
 
+## About
+
 The goal of cpp11armadillo is to provide a novel approach to use the
 [Armadillo C++ library](https://arma.sourceforge.net/docs.html) by using
 the header-only cpp11 R package and to simplify things for the end-user.
 
 ⚠️Important⚠️: cpp11armadillo was created to ease writing functions in
-your own package and it does not offer on-the-fly compilation for code
+your own packages and does not offer on-the-fly compilation for code
 snippets.
 
 The idea is to pass matrices/vectors from R to C++, write pure
 C++/Armadillo code for the computation, and then export the result back
 to R with the proper data structures.
 
-This follows from the same goals as cpp11:
+[RcppArmadillo](https://cran.r-project.org/package=RcppArmadillo) is a
+popular R package used by over 1200 CRAN packages as of 2024-12-13.
+RcppArmadillo uses the GPL-3 license.
+
+cpp11armadillo has different internals, even when the goal is the same,
+and it aims to:
 
   - Enforcing copy-on-write semantics.
   - Improving the safety of using the R API from C++ code.
@@ -34,23 +41,48 @@ This follows from the same goals as cpp11:
   - Faster compilation time with lower memory requirements.
   - Growing vectors more efficiently.
 
+The design differences result in marginally higher speed for
+cpp11armadillo, and the real difference for the end user is that
+cpp11armadillo:
+
+  - Has a smaller memory footprint.
+  - Uses the Apache license (i.e., The Apache license is permissive and
+    allows commercial use with attribution, unlike the GPL-3, which
+    requires open-source redistribution.)
+  - Can be vendored to be used in restricted environments (i.e., servers
+    with no internet access or where IT restricts the installation of
+    packages).
+
+This is expanded in the current
+[preprint](https://arxiv.org/abs/2408.11074).
+
 If this software is useful to you, please consider donating on [Buy Me A
 Coffee](https://buymeacoffee.com/pacha). All donations will be used to
-continue improving `cpp11armadillo`.
+continue improving cpp11armadillo.
 
-## Installation
+## Getting Started
 
-You can install the released version of cpp11armadillo from CRAN:
+Install the released version of cpp11armadillo from CRAN:
 
 ``` r
 install.packages("cpp11armadillo")
 ```
 
-You can install the development version of cpp11armadillo from GitHub:
+Or, alternatively, install the development version of cpp11armadillo
+from GitHub:
 
 ``` r
 remotes::install_github("pachadotdev/cpp11armadillo")
 ```
+
+## Who uses cpp11armadillo?
+
+cpp11armadillo is used by the following packages:
+
+  - [lotri](https://github.com/nlmixr2/lotri), created by Dr. Matt
+    Fidler.
+  - [economiccomplexity](https://github.com/pachadotdev/economiccomplexity),
+    created by me.
 
 ## Examples
 
@@ -70,30 +102,35 @@ Then follow the instructions from the README. The template contains a
 simple Ordinary Least Squares (OLS) example that you can run to test the
 package.
 
-The `cpp11armadillotest` directory contains a package that I use to test
-`cpp11armadillo`. It includes tests for OLS, eigenvalues, matrix
-decompositions (Cholesky and QR), the Capital Asset Pricing Model
-(CAPM), and data consistency between R and C++.
+The
+[cpp11armadillotest](https://github.com/pachadotdev/cpp11armadillo/tree/main/cpp11armadillotest)
+directory contains a package that I use to test cpp11armadillo. It
+includes tests for OLS, eigenvalues, matrix decompositions (Cholesky and
+QR), the Capital Asset Pricing Model (CAPM), and data consistency
+between R and C++.
 
-The vignette expand on the OLS estimator, and the `econometrics`
-directory contains additional examples for the OLS estimator and other
-statistical models implemented in C++.
+The vignette expands on the OLS estimator, and the [hansen
+package](https://pacha.dev/hansen/) expands on how to use cpp11armadillo
+for Econometric models.
 
 ## Linear Algebra Libraries
 
 Armadillo supports OpenBLAS, Intel MKL, and the Accelerate framework
 (Mac).
 
-You can install OpenBLAS on Debian-based systems with:
+Install OpenBLAS on Debian-based systems with:
 
-``` sh
+``` bash
 sudo apt-get install libopenblas-dev
 ```
 
-You can also use other commands for your specific operating system.
+Restart R and run the following command to verify:
 
-To verify that R is using OpenBLAS, you can run `sessionInfo()` after
-restarting R to check the BLAS/LAPACK libraries in use:
+``` r
+sessionInfo()
+```
+
+R should display something like:
 
 ``` r
 Matrix products: default

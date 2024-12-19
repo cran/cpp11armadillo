@@ -6,7 +6,7 @@ Description: Provides function declarations and inline function definitions that
     linear algebra and scientific computing. This implementation is detailed
     in Vargas Sepulveda and Schneider Malamud (2024)
     <doi:10.48550/arXiv.2408.11074>.
-Version: 0.4.0
+Version: 0.4.1
 Authors@R: c(
     person(
         given = "Mauricio",
@@ -24,8 +24,8 @@ Authors@R: c(
         role = c("aut"),
         comment = "Armadillo library (C++)")
     )
-Suggests: cpp11, desc, knitr, mockery, rmarkdown, testthat (>= 3.0.0),
-        withr
+Imports: cpp11
+Suggests: desc, knitr, mockery, rmarkdown, testthat (>= 3.0.0), withr
 Depends: R(>= 3.5.0)
 License: Apache License (>= 2)
 BugReports: https://github.com/pachadotdev/cpp11armadillo/issues
@@ -36,11 +36,11 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-12-13 03:42:33 UTC; pacha
+Packaged: 2024-12-18 08:22:11 UTC; pacha
 Author: Mauricio Vargas Sepulveda [aut, cre]
     (<https://orcid.org/0000-0003-1017-7574>),
   Jonathan Schneider Malamud [ctb],
   Conrad Sanderson [aut] (Armadillo library (C++))
 Maintainer: Mauricio Vargas Sepulveda <m.sepulveda@mail.utoronto.ca>
 Repository: CRAN
-Date/Publication: 2024-12-13 06:00:02 UTC
+Date/Publication: 2024-12-19 17:00:02 UTC
