@@ -1,3 +1,32 @@
+# cpp11armadillo 0.4.4
+
+* Provides wrappers to avoid CRAN notes with Armadillo functions that use
+  `std::cout` (#05a342b).
+* Allows to convert `uword` to `integers` and vice versa.
+* Allows to convert `imat` and `umat` to `integers_matrix<>` and vice versa.
+* Allows to convert `fmat` to `doubles_matrix<>` and vice versa.
+* Provides `as_spmat()` as a wrapper for `as_SpMat()`.
+* Added new vignettes:
+  * Signal and image processing.
+  * Decompositions, factorisations, inverses and equation solvers (dense matrices).
+  * Decompositions, factorisations, inverses and equation solvers (sparse matrices).
+  * Miscellaneous.
+
+# cpp11armadillo 0.4.3
+
+* Expanded documentation.
+* Added new vignettes:
+  * Functions of vectors, matrices, and cubes.
+  * Statistics and clustering.
+  * Syntax comparison for MATLAB/Octave users.
+* New package template.
+* Provides `as_mat()` and `as_col()` as wrappers for `as_Mat()` and `as_Col()`.
+
+# cpp11armadillo 0.4.2
+
+* Expands the package internals to convert `umat` to `integers_matrix<>`.
+* Expands the package internals to convert `ivec` to `integers`.
+
 # cpp11armadillo 0.4.1
 
 * Modified configure file to fix Fedora errors.
@@ -53,7 +82,7 @@
 # cpp11armadillo 0.2.8
 
 * Provides templates to convert to and from sparse matrices.
-* Removes `using namespace std;` from headers (see https://www.reddit.com/r/cpp_questions/comments/160eivk/is_using_namespace_std_really_considered_bad/)
+* Removes `using namespace std;` from headers (see https://www.reddit.com/r/cpp_questions/comments/160eivk/is_using_namespace_std_really_considered_bad/).
 
 # cpp11armadillo 0.2.7
 

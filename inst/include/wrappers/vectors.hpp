@@ -20,6 +20,11 @@ inline Col<T> as_Col(const T& x) {
   throw std::runtime_error("Cannot convert to Col");
 }
 
+template <typename T>
+inline Col<T> as_Col(const Col<T>& x) {
+  return x;
+}
+
 template <typename T, typename U>
 inline Col<T> as_Col_(const U& x) {
   const size_t n = x.size();
@@ -38,6 +43,23 @@ inline Col<T> as_Col_(const U& x) {
 inline Col<double> as_Col(const doubles& x) { return as_Col_<double, doubles>(x); }
 
 inline Col<int> as_Col(const integers& x) { return as_Col_<int, integers>(x); }
+
+// cpp11armadillo 0.4.3
+// as_col() = alias for as_Col()
+
+template <typename T>
+inline Col<T> as_col(const T& x) {
+  return as_Col(x);
+}
+
+template <typename T>
+inline Col<T> as_col(const Col<T>& x) {
+  return as_Col(x);
+}
+
+inline Col<double> as_col(const doubles& x) { return as_Col(x); }
+
+inline Col<int> as_col(const integers& x) { return as_Col(x); }
 
 inline uvec as_uvec(const cpp11::integers& x) {
   uvec res(x.size());
@@ -91,6 +113,24 @@ inline integers as_integers(const uvec& x) {
   return y;
 }
 
+inline integers as_integers(const ivec& x) {
+  const size_t n = x.n_elem;
+
+  writable::integers y(n);
+
+  std::copy(x.begin(), x.end(), y.begin());
+
+  return y;
+}
+
+inline integers as_integers(const uword& x) {
+  writable::integers y(1);
+
+  y[0] = static_cast<int>(x);
+
+  return y;
+}
+
 // same as above, but for matrices
 
 template <typename T, typename U>
@@ -120,6 +160,12 @@ inline doubles_matrix<> as_doubles_matrix(const Col<double>& x) {
 
 inline integers_matrix<> as_integers_matrix(const Col<int>& x) {
   return Col_to_dblint_matrix_<int, integers_matrix<>>(x);
+}
+
+// Specialization for fmat
+inline doubles_matrix<> as_doubles_matrix(const fmat& x) {
+  Mat<double> temp = conv_to<Mat<double>>::from(x);
+  return Mat_to_dblint_matrix_<double, doubles_matrix<>>(temp);
 }
 
 // Complex
