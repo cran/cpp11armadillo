@@ -157,12 +157,9 @@ inline integers_matrix<> as_integers_matrix(const SourceMatType& A) {
   const size_t m = A.n_cols;
 
   writable::integers_matrix<> B(n, m);
+  int* B_data = INTEGER(B);
 
-  for (size_t i = 0; i < n; ++i) {
-    for (size_t j = 0; j < m; ++j) {
-      B(i, j) = static_cast<int>(A(i, j));
-    }
-  }
+  std::memcpy(B_data, A.memptr(), n * m * sizeof(int));
 
   return B;
 }
@@ -191,6 +188,38 @@ inline list Mat_to_complex_matrix_(const Mat<T>& A) {
 
 inline list as_complex_matrix(const Mat<std::complex<double>>& A) {
   return Mat_to_complex_matrix_<std::complex<double>>(A);
+}
+
+// Specialized version for sparse matrices
+
+template <typename T>
+inline integers_matrix<> as_integers_matrix(const SpMat<T>& A) {
+  const size_t n = A.n_rows;
+  const size_t m = A.n_cols;
+
+  writable::integers_matrix<> B(n, m);
+
+  // Initialize with zeros
+  for (size_t i = 0; i < n; ++i) {
+    for (size_t j = 0; j < m; ++j) {
+      B(i, j) = 0;
+    }
+  }
+
+  // Copy non-zero elements
+  for (typename SpMat<T>::const_iterator it = A.begin(); it != A.end(); ++it) {
+    B(it.row(), it.col()) = static_cast<int>(*it);
+  }
+
+  return B;
+}
+
+inline integers_matrix<> as_integers_matrix(const SpMat<unsigned long long>& A) {
+  return as_integers_matrix<unsigned long long>(A);
+}
+
+inline integers_matrix<> as_integers_matrix(const SpMat<long long>& A) {
+  return as_integers_matrix<long long>(A);
 }
 
 #endif
