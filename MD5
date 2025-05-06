@@ -1,4 +1,4 @@
-8726cf5a1f1fccc424e9d97fec672c25 *DESCRIPTION
+ac2620c0e521cb56c9cf1ffa0d63e44d *DESCRIPTION
 1a32883fb35a1cd98393e3343044d951 *NAMESPACE
 1de9106025e851e8144cd2c52e5f8b16 *NEWS.md
 31b7c3b04d02cc10558d03bb15f6d469 *R/cpp11armadillo-package.R
@@ -7,7 +7,7 @@ f14d4fae9fec3562ecba3db5fdb17ec5 *R/template.R
 e2358fe176549e738a7e3ad93f550576 *R/version.R
 6972c87fc716cd06f9b1ef072ceb73d6 *README.md
 4454e632feb75ce4f508807d50b3b12f *build/partial.rdb
-10e2c461408bff230f633ff2bff17ace *build/vignette.rds
+d4bb48b4603560baca0e05e86d337ca9 *build/vignette.rds
 184c6ff576ecf6c08625cc70c4d8dbb9 *configure
 d41d8cd98f00b204e9800998ecf8427e *configure.win
 42f10ffbc230f3e8d9019a153b433e44 *inst/CITATION
@@ -45,6 +45,9 @@ b469cfe33b6be5fb02ee285763e77f6c *inst/doc/save-load.html
 5e270ae6034b339c2a13d20a5f7d2dec *inst/doc/signal-and-image-processing.R
 84b7a3e6e7109777373f14a386b36a66 *inst/doc/signal-and-image-processing.Rmd
 687d7f5504d75a7e484b7b895c6b60df *inst/doc/signal-and-image-processing.html
+5e270ae6034b339c2a13d20a5f7d2dec *inst/doc/sparse-matrices.R
+f54de73bbcd5ffe89f101d586785d98e *inst/doc/sparse-matrices.Rmd
+1396cb8cb5133985b79591f69cfb67a6 *inst/doc/sparse-matrices.html
 5e270ae6034b339c2a13d20a5f7d2dec *inst/doc/statistics-and-clustering.R
 b6b74dbce85ad5129d984a4a27abd873 *inst/doc/statistics-and-clustering.Rmd
 f6fb5b70cad8e2fa2ddd93d6b0fd4e64 *inst/doc/statistics-and-clustering.html
@@ -704,13 +707,13 @@ a68542412e74484f2dcc5f6101930a72 *inst/include/armadillo/wall_clock_meat.hpp
 3297436077cd85a04e00bb8f7e3340ca *inst/include/cpp11armadillo.hpp
 93a191d298c0f2e4d110ae53c36291c2 *inst/include/r_messages.hpp
 0ddb172f5bf8542c1e23402d264fd9d3 *inst/include/wrappers/matrices.hpp
-309ede0aa7e5cc37c7a068699111e16d *inst/include/wrappers/sparse_matrices.hpp
+28fe866711acc3492bd7047afc0c2b2a *inst/include/wrappers/sparse_matrices.hpp
 7f878230e8d9cbb242ff65f06155cd36 *inst/include/wrappers/vectors.hpp
 8ee4927b63097e5b8bcb2728796a47d0 *inst/rstudio/templates/project/cpp11armadillo_small.png
 d1e761dd0b8130ae50e6930f4010921d *inst/rstudio/templates/project/hello_world.dcf
 98bdc90e0afbe45ba0036c2190cbc950 *man/armadillo_version.Rd
 1bd0e6be122ea90bb8d90f5ee16932c7 *man/check_cpp11.Rd
-6f31c1b0fed45c3f591ac35811dcb08b *man/cpp11armadillo-package.Rd
+3322c8e39e366ce0c0ae970db29f51c0 *man/cpp11armadillo-package.Rd
 4b3615f8f4b78764cfa7ad58de6a17dd *man/cpp_vendor.Rd
 b8c9467c313a3a58985404e0890b2f3e *man/figures/logo.svg
 1d17779c358459865ff5d216ba75c896 *man/pkg_template.Rd
@@ -731,5 +734,6 @@ f9f8f333f1f5b242cd8bbc364488051b *vignettes/member-functions-and-variables.Rmd
 d42e33c294def3c74fe39480c9a2bf2f *vignettes/references.bib
 c015188afc65072343650b25d6e90556 *vignettes/save-load.Rmd
 84b7a3e6e7109777373f14a386b36a66 *vignettes/signal-and-image-processing.Rmd
+f54de73bbcd5ffe89f101d586785d98e *vignettes/sparse-matrices.Rmd
 b6b74dbce85ad5129d984a4a27abd873 *vignettes/statistics-and-clustering.Rmd
 ee59b00a1b4d3688f1dc909c9dedc131 *vignettes/syntax-comparison-for-matlab-users.Rmd
