@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Armadillo configuration</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Armadillo configuration</h1>
+
+
+
+<p>If you vendor <code>cpp11armadillo</code>, Armadillo options on C++ side can be configured via editing the file <code>include/armadillo/config.hpp</code>.</p>
+<p>Specific functionality can be enabled or disabled by uncommenting or commenting out a particular <code>#define</code>, listed below.</p>
+<p>Some options can also be specified by explicitly defining them before including the armadillo header in <code>cpp</code> scripts. For example:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="pp">#define ARMA_WARN_LEVEL </span><span class="dv">1</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;cpp11.hpp&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="pp">#include </span><span class="im">&lt;cpp11armadillo.hpp&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>[[<span class="at">cpp11</span>::<span class="at">register</span>]] my_fun() {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>  <span class="co">// some linear algebra code</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>  <span class="co">// ...</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>}</span></code></pre></div>
+<table>
+<colgroup>
+<col width="38%"></col>
+<col width="61%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_WRAPPER</code></td>
+<td>Disable going through the run-time Armadillo wrapper library (<code>libarmadillo.so</code>) when calling LAPACK, BLAS, ARPACK, and SuperLU functions. You will need to directly link with BLAS, LAPACK, etc (eg. <code>-lblas -llapack</code>)</td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_LAPACK</code></td>
+<td>Enable use of LAPACK, or a high-speed replacement for LAPACK (eg. OpenBLAS, Intel MKL, or the Accelerate framework). Armadillo requires LAPACK for functions such as <code>svd()</code>, <code>inv()</code>, <code>eig_sym()</code>, <code>solve()</code>, etc.</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_LAPACK</code></td>
+<td>Disable use of LAPACK; overrides <code>ARMA_USE_LAPACK</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_BLAS</code></td>
+<td>Enable use of BLAS, or a high-speed replacement for BLAS (eg. OpenBLAS, Intel MKL, or the Accelerate framework). BLAS is used for matrix multiplication. Without BLAS, Armadillo will use a built-in matrix multiplication routine, which might be slower for large matrices.</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_BLAS</code></td>
+<td>Disable use of BLAS; overrides <code>ARMA_USE_BLAS</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_NEWARP</code></td>
+<td>Enable use of NEWARP (built-in alternative to ARPACK). This is used for the eigen decomposition of real (non-complex) sparse matrices, ie. <code>eigs_gen()</code>, <code>eigs_sym()</code> and <code>svds()</code>. Requires <code>ARMA_USE_LAPACK</code> to be enabled. If use of both NEWARP and ARPACK is enabled, NEWARP will be preferred.</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_NEWARP</code></td>
+<td>Disable use of NEWARP (built-in alternative to ARPACK); overrides <code>ARMA_USE_NEWARP</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_ARPACK</code></td>
+<td>Enable use of ARPACK, or a high-speed replacement for ARPACK. Armadillo requires ARPACK for the eigen decomposition of complex sparse matrices, ie. <code>eigs_gen()</code>, <code>eigs_sym()</code> and <code>svds()</code>. If use of NEWARP is disabled, ARPACK will also be used for the eigen decomposition of real sparse matrices.</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_ARPACK</code></td>
+<td>Disable use of ARPACK; overrides <code>ARMA_USE_ARPACK</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_SUPERLU</code></td>
+<td>Enable use of SuperLU, which is used by <code>spsolve()</code> for finding the solutions of sparse systems, as well as <code>eigs_sym()</code> and <code>eigs_gen()</code> in shift-invert mode. You will need to link with the superlu library, for example <code>-lsuperlu</code></td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_SUPERLU</code></td>
+<td>Disable use of SuperLU; overrides <code>ARMA_USE_SUPERLU</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_HDF5</code></td>
+<td>Enable the ability to save and load matrices stored in the HDF5 format; the <code>hdf5.h</code> header file must be available on your system and you will need to link with the hdf5 library (eg. <code>-lhdf5</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_HDF5</code></td>
+<td>Disable the use of the HDF5 library; overrides <code>ARMA_USE_HDF5</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_FFTW3</code></td>
+<td>Enable use of the FFTW3 library by <code>fft()</code> and <code>ifft()</code>; you will need to link with the FFTW3 library (eg. <code>-lfftw3</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_FFTW3</code></td>
+<td>Disable the use of the FFTW3 library; overrides <code>ARMA_USE_FFTW3</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_DONT_USE_STD_MUTEX</code></td>
+<td>Disable use of <code>std::mutex</code>; applicable if your compiler and/or environment doesn’t support <code>std::mutex</code></td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_OPTIMISE_BAND</code></td>
+<td>Disable automatically optimised handling of band matrices by <code>solve()</code> and <code>chol()</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_DONT_OPTIMISE_SYMPD</code></td>
+<td>Disable automatically optimised handling of symmetric/hermitian positive definite matrices by <code>solve()</code>, <code>inv()</code>, <code>pinv()</code>, <code>expmat()</code>, <code>logmat()</code>, <code>sqrtmat()</code>, <code>powmat()</code>, <code>rcond()</code></td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_USE_OPENMP</code></td>
+<td>Use OpenMP for parallelisation of computationally expensive element-wise operations (such as <code>exp()</code>, <code>log()</code>, <code>cos()</code>, etc). Automatically enabled when using a compiler which has OpenMP 3.1+ active (eg. the <code>-fopenmp</code> option for gcc and clang).</td>
+</tr>
+<tr class="even">
+<td><code>ARMA_DONT_USE_OPENMP</code></td>
+<td>Disable use of OpenMP for parallelisation of element-wise operations; overrides <code>ARMA_USE_OPENMP</code></td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_OPENMP_THRESHOLD</code></td>
+<td>The minimum number of elements in a matrix to enable OpenMP based parallelisation of computationally expensive element-wise functions; default value is 320</td>
+</tr>
+<tr class="even">
+<td><code>ARMA_OPENMP_THREADS</code></td>
+<td>The maximum number of threads for OpenMP based parallelisation of computationally expensive element-wise functions; default value is 8</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_BLAS_CAPITALS</code></td>
+<td>Use capitalised (uppercase) BLAS and LAPACK function names (eg. <code>DGEMM</code> vs <code>dgemm</code>)</td>
+</tr>
+<tr class="even">
+<td><code>ARMA_BLAS_UNDERSCORE</code></td>
+<td>Append an underscore to BLAS and LAPACK function names (eg. <code>dgemm_</code> vs <code>dgemm</code>). Enabled by default.</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_BLAS_LONG_LONG</code></td>
+<td>Use <code>&quot;long long&quot;</code> instead of <code>&quot;int&quot;</code> when calling BLAS and LAPACK functions; the <code>&quot;long long&quot;</code> type is a 64 bit integer type on all platforms</td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_FORTRAN_HIDDEN_ARGS</code></td>
+<td>Use so-called “hidden arguments” when calling BLAS and LAPACK functions. Enabled by default. See Fortran argument passing conventions for more details.</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_DONT_USE_FORTRAN_HIDDEN_ARGS</code></td>
+<td>Disable use of so-called “hidden arguments” when calling BLAS and LAPACK functions. May be necessary when using Armadillo in conjunction with broken MKL headers (eg. if you have <code>#include &quot;mkl_lapack.h&quot;</code> in your code).</td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_TBB_ALLOC</code></td>
+<td>Use Intel TBB <code>scalable_malloc()</code> and <code>scalable_free()</code> instead of standard <code>malloc()</code> and <code>free()</code> for managing matrix memory</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_USE_MKL_ALLOC</code></td>
+<td>Use Intel MKL <code>mkl_malloc()</code> and <code>mkl_free()</code> instead of standard <code>malloc()</code> and <code>free()</code> for managing matrix memory</td>
+</tr>
+<tr class="even">
+<td><code>ARMA_USE_MKL_TYPES</code></td>
+<td>Use Intel MKL types for complex numbers. You will need to include appropriate MKL headers before the Armadillo header. You may also need to enable one or more of the following options: <code>ARMA_BLAS_LONG_LONG</code>, <code>ARMA_DONT_USE_FORTRAN_HIDDEN_ARGS</code></td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_64BIT_WORD</code></td>
+<td>Use 64 bit integers for matrix and vector sizes. Automatically enabled when using a 64-bit platform, except when using Armadillo in the R environment (via RcppArmadillo). Useful if matrices/vectors capable of holding more than 4 billion elements are required. This can also be enabled by adding <code>#define ARMA_64BIT_WORD</code> before each instance of <code>#include &lt;armadillo&gt;</code>. See also the <code>ARMA_BLAS_LONG_LONG</code> option.</td>
+</tr>
+<tr class="even">
+<td><code>ARMA_MAT_PREALLOC</code></td>
+<td>The number of pre-allocated elements used by matrices and vectors. Must be always enabled and set to an integer that is at least 1. By default set to 16. If you mainly use lots of very small vectors (eg. ≤ 4 elements), change the number to the size of your vectors.</td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_COUT_STREAM</code></td>
+<td>The default stream used for printing matrices and cubes by <code>.print()</code>. Must be always enabled. By default defined to <code>std::cout</code></td>
+</tr>
+<tr class="even">
+<td><code>ARMA_CERR_STREAM</code></td>
+<td>The default stream used for printing warnings and errors. Must be always enabled. By default defined to <code>std::cerr</code></td>
+</tr>
+<tr class="odd">
+<td><code>ARMA_WARN_LEVEL</code></td>
+<td>The level of warning messages printed to <code>ARMA_CERR_STREAM</code>. Must be an integer ≥ 0. By default defined to 2.<br>0 = no warnings; generally not recommended.<br>1 = only critical warnings about arguments and/or data which are likely to lead to incorrect results.<br>2 = as per level 1, and warnings about poorly conditioned systems (low <code>rcond</code>) detected by <code>solve()</code>, <code>spsolve()</code>, etc.<br>3 = as per level 2, and warnings about failed decompositions, failed saving / loading, etc.</td>
+</tr>
+</tbody>
+</table>
+<div id="references" class="section level1">
+<h1>References</h1>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

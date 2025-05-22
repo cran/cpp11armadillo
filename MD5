@@ -1,13 +1,13 @@
-ac2620c0e521cb56c9cf1ffa0d63e44d *DESCRIPTION
+67851a37be31dd5f02edee1073a70b69 *DESCRIPTION
 1a32883fb35a1cd98393e3343044d951 *NAMESPACE
-1de9106025e851e8144cd2c52e5f8b16 *NEWS.md
+e7088b94dc3ba55c2b8d3cf300fc5f76 *NEWS.md
 31b7c3b04d02cc10558d03bb15f6d469 *R/cpp11armadillo-package.R
 f14d4fae9fec3562ecba3db5fdb17ec5 *R/template.R
 2df2c19aa0fee0704009aee0b61c9704 *R/vendor.R
 e2358fe176549e738a7e3ad93f550576 *R/version.R
 6972c87fc716cd06f9b1ef072ceb73d6 *README.md
 4454e632feb75ce4f508807d50b3b12f *build/partial.rdb
-d4bb48b4603560baca0e05e86d337ca9 *build/vignette.rds
+8c4fc569d641dd2957457dcd6c27f798 *build/vignette.rds
 184c6ff576ecf6c08625cc70c4d8dbb9 *configure
 d41d8cd98f00b204e9800998ecf8427e *configure.win
 42f10ffbc230f3e8d9019a153b433e44 *inst/CITATION
@@ -15,6 +15,9 @@ d41d8cd98f00b204e9800998ecf8427e *configure.win
 5e270ae6034b339c2a13d20a5f7d2dec *inst/doc/basic-usage.R
 fd7f7edf6c4ba070af15046e097d5be7 *inst/doc/basic-usage.Rmd
 ec61c8bae595fa5e3aad1d229e89dbbe *inst/doc/basic-usage.html
+5e270ae6034b339c2a13d20a5f7d2dec *inst/doc/configuration.R
+3cab10fa36a40808203da52a05dedbc8 *inst/doc/configuration.Rmd
+aa12aeefaa7a679733d60a80142ddb2e *inst/doc/configuration.html
 5e270ae6034b339c2a13d20a5f7d2dec *inst/doc/decompositions-factorisations-inverses-and-equation-solvers-dense.R
 ba708edfb4edc302af577f657d3d75ee *inst/doc/decompositions-factorisations-inverses-and-equation-solvers-dense.Rmd
 aa319bc837e0fa90df68dbfd1858aeee *inst/doc/decompositions-factorisations-inverses-and-equation-solvers-dense.html
@@ -706,9 +709,9 @@ a68542412e74484f2dcc5f6101930a72 *inst/include/armadillo/wall_clock_meat.hpp
 9994025f48a36be6a23d471a50e3aeef *inst/include/armadillo/xvec_htrans_meat.hpp
 3297436077cd85a04e00bb8f7e3340ca *inst/include/cpp11armadillo.hpp
 93a191d298c0f2e4d110ae53c36291c2 *inst/include/r_messages.hpp
-0ddb172f5bf8542c1e23402d264fd9d3 *inst/include/wrappers/matrices.hpp
+541e5c36cacbb7f00e71c18049882e57 *inst/include/wrappers/matrices.hpp
 28fe866711acc3492bd7047afc0c2b2a *inst/include/wrappers/sparse_matrices.hpp
-7f878230e8d9cbb242ff65f06155cd36 *inst/include/wrappers/vectors.hpp
+56c006f80a8bd2c149829379fc95a6fc *inst/include/wrappers/vectors.hpp
 8ee4927b63097e5b8bcb2728796a47d0 *inst/rstudio/templates/project/cpp11armadillo_small.png
 d1e761dd0b8130ae50e6930f4010921d *inst/rstudio/templates/project/hello_world.dcf
 98bdc90e0afbe45ba0036c2190cbc950 *man/armadillo_version.Rd
@@ -723,6 +726,7 @@ fd8ee91894d955e18ae85f572c837c3f *tests/testthat/test-template.R
 139bf4733bf50c086ac98a58606ffa84 *tests/testthat/test-vendor.R
 0c9ea1b6f2d15c838e3f0a88709bf842 *tests/testthat/test-version.R
 fd7f7edf6c4ba070af15046e097d5be7 *vignettes/basic-usage.Rmd
+3cab10fa36a40808203da52a05dedbc8 *vignettes/configuration.Rmd
 ba708edfb4edc302af577f657d3d75ee *vignettes/decompositions-factorisations-inverses-and-equation-solvers-dense.Rmd
 7af847d6c67465bb4312dd567b4e6dc8 *vignettes/decompositions-factorisations-inverses-and-equation-solvers-sparse.Rmd
 bab099fe17554c8580e54737dd268b2c *vignettes/functions-of-vector-matrices-cubes.Rmd
