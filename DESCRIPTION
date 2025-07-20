@@ -6,7 +6,7 @@ Description: Provides function declarations and inline function definitions that
     linear algebra and scientific computing. This implementation is detailed
     in Vargas Sepulveda and Schneider Malamud (2024)
     <doi:10.1016/j.softx.2025.102087>.
-Version: 0.5.2
+Version: 0.5.4
 Authors@R: c(
     person(
         given = "Mauricio",
@@ -36,11 +36,11 @@ Encoding: UTF-8
 VignetteBuilder: knitr
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2025-05-22 23:08:02 UTC; pacha
+Packaged: 2025-07-20 05:41:44 UTC; pacha
 Author: Mauricio Vargas Sepulveda [aut, cre] (ORCID:
     <https://orcid.org/0000-0003-1017-7574>),
   Jonathan Schneider Malamud [ctb],
   Conrad Sanderson [aut] (Armadillo library (C++))
 Maintainer: Mauricio Vargas Sepulveda <m.sepulveda@mail.utoronto.ca>
 Repository: CRAN
-Date/Publication: 2025-05-22 23:30:02 UTC
+Date/Publication: 2025-07-20 06:10:02 UTC

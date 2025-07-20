@@ -40,6 +40,28 @@ inline Col<double> as_Col(const doubles& x) { return as_Col_<double, doubles>(x)
 
 inline Col<int> as_Col(const integers& x) { return as_Col_<int, integers>(x); }
 
+inline Col<double> as_Col(const doubles_matrix<>& x) {
+  if (x.ncol() != 1) {
+    throw std::runtime_error("Cannot convert matrix with multiple columns to Col");
+  }
+
+  const size_t n = x.nrow();
+  return Col<double>(reinterpret_cast<double*>(REAL(x.data())), n, false);
+}
+
+inline Col<int> as_Col(const integers_matrix<>& x) {
+  // Only convert if it's a column vector (1 column)
+  if (x.ncol() != 1) {
+    throw std::runtime_error("Cannot convert matrix with multiple columns to Col");
+  }
+
+  const size_t n = x.nrow();
+  return Col<int>(reinterpret_cast<int*>(INTEGER(x.data())), n, false);
+}
+
+inline Col<double> as_col(const doubles_matrix<>& x) { return as_Col(x); }
+inline Col<int> as_col(const integers_matrix<>& x) { return as_Col(x); }
+
 // cpp11armadillo 0.4.3
 // as_vec() = alias for as_Col()
 
@@ -92,7 +114,19 @@ inline U Col_to_dblint_(const Col<T>& x) {
 }
 
 inline integers as_integers(const Col<int>& x) {
+  // Fast path: int to int
   return Col_to_dblint_<int, integers>(x);
+}
+
+inline integers as_integers(const Col<long long>& x) {
+  // Explicit cast for long long to int
+  const size_t n = x.n_elem;
+  writable::integers y(n);
+  const long long* x_data = x.memptr();
+  for (size_t i = 0; i < n; ++i) {
+    y[i] = static_cast<int>(x_data[i]);
+  }
+  return y;
 }
 
 inline doubles as_doubles(const Col<double>& x) {
@@ -100,16 +134,6 @@ inline doubles as_doubles(const Col<double>& x) {
 }
 
 inline integers as_integers(const uvec& x) {
-  const size_t n = x.n_elem;
-
-  writable::integers y(n);
-
-  std::copy(x.begin(), x.end(), y.begin());
-
-  return y;
-}
-
-inline integers as_integers(const ivec& x) {
   const size_t n = x.n_elem;
 
   writable::integers y(n);

@@ -27,31 +27,15 @@ document.addEventListener('DOMContentLoaded', function(e) {
   }
 });
 </script>
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
 
@@ -251,19 +235,25 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">Syntax comparison for MATLAB/Octave users</h1>
+<h1 class="title toc-ignore">Syntax comparison for MATLAB/Octave
+users</h1>
 
 
 
 <p><strong>This vignette is adapted from the official Armadillo <a href="https://arma.sourceforge.net/docs.html">documentation</a>.</strong></p>
 <div id="matlaboctave-syntax-and-corresponding-armadillo-syntax" class="section level1">
 <h1>Matlab/Octave syntax and corresponding Armadillo syntax</h1>
-<p>The following table uses <code>V</code> for vectors, <code>M</code> for matrices, <code>Q</code> for cubes and <code>F</code> for fields. For operations, <code>A</code>, <code>B</code> and <code>C</code> denote matrices. Because MATLAB indexes from 1 (as R does), the k-th column in MATLAB has index <code>k</code> but in C++ it has index <code>k-1</code>.</p>
+<p>The following table uses <code>V</code> for vectors, <code>M</code>
+for matrices, <code>Q</code> for cubes and <code>F</code> for fields.
+For operations, <code>A</code>, <code>B</code> and <code>C</code> denote
+matrices. Because MATLAB indexes from 1 (as R does), the k-th column in
+MATLAB has index <code>k</code> but in C++ it has index
+<code>k-1</code>.</p>
 <table>
 <colgroup>
-<col width="25%"></col>
-<col width="26%"></col>
-<col width="48%"></col>
+<col width="25%" />
+<col width="26%" />
+<col width="48%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -346,7 +336,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <tr class="odd">
 <td><code>M&#39;</code></td>
 <td><code>M.t()</code> or <code>trans(M)</code></td>
-<td>matrix transpose / Hermitian transpose (for complex matrices, the conjugate of each element is taken)</td>
+<td>matrix transpose / Hermitian transpose (for complex matrices, the
+conjugate of each element is taken)</td>
 </tr>
 <tr class="even">
 <td><code>M = zeros(size(M))</code></td>
@@ -420,7 +411,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </tr>
 <tr class="even">
 <td><code>M</code></td>
-<td><code>cout &lt;&lt; M &lt;&lt; endl</code> or <code>M.print(&quot;M =&quot;)</code></td>
+<td><code>cout &lt;&lt; M &lt;&lt; endl</code> or
+<code>M.print(&quot;M =&quot;)</code></td>
 <td></td>
 </tr>
 <tr class="odd">
@@ -435,7 +427,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </tr>
 <tr class="odd">
 <td><code>F = {A; B}</code></td>
-<td><code>field&lt;mat&gt; F(2,1)</code>, <code>F(0,0) = A</code> or <code>F(1,0) = B</code></td>
+<td><code>field&lt;mat&gt; F(2,1)</code>, <code>F(0,0) = A</code> or
+<code>F(1,0) = B</code></td>
 <td>fields store arbitrary objects, such as matrices</td>
 </tr>
 </tbody>
